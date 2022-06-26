@@ -2,7 +2,7 @@ import os
 import shutil
 
 if os.path.isdir("docs"):
-    os.rmdir("./docs")
+    shutil.rmtree("./docs", ignore_errors=True)
 
 shutil.copytree("./build/web", "./docs/")
-os.rmdir("./build/")
+shutil.rmtree("./build", ignore_errors=True)
