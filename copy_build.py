@@ -5,3 +5,4 @@ if os.path.isdir("docs"):
     os.rmdir("./docs")
 
 shutil.copytree("./build/web", "./docs/")
+os.rmdir("./build/")
