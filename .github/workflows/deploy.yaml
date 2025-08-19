@@ -9,6 +9,10 @@ jobs:
   deployment:
     runs-on: ubuntu-latest
     steps:
-      - name: Build
-        run: echo "Building..."
-
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Build and deploy
+        uses: shalzz/zola-deploy-action@v0.21.0
+        env:
+          PAGES_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
