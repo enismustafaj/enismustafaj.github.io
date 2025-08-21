@@ -7,9 +7,6 @@ base_url = "https://enismustafaj.github.io"
 # Whether to automatically compile all Sass files in the sass directory
 compile_sass = false
 
-# Whether to build a search index to be used later on by a JavaScript library
-build_search_index = true
-
 [markdown]
 # Whether to do syntax highlighting
 # Theme can be customised by setting the `highlight_theme` variable to a theme supported by Zola
@@ -17,10 +14,11 @@ highlight_code = true
 
 [extra]
 # Put all your custom variables here
-theme = "auto"
+theme = "dark"
 socials = [
-  # Configure socials here
+  { name = "github", url = "https://github.com/enismustafaj/", icon = "github" }
 ]
 menu = [
-  # Configure menu bar here
+  { name = "about", url = "/about", weight = 1 },
+  { name = "posts", url = "/posts", weight = 2 },
 ]
