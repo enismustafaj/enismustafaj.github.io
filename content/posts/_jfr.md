@@ -1,7 +1,11 @@
-# Intro to JDK Flight Recording
++++
+title = "Introduction to JDK Flight Recorder"
++++
+
+# Intro to JDK Flight Recorder
 
 ## Overview
-JDK Flight Recording is a tool, integrated in JVM, for collecting diagnostics and profiling data from running Java applications. It causes insignificant performance overhead in the running application, so it can be enabled in high load production environaments.
+JDK Flight Recorder is a tool, integrated in JVM, for collecting diagnostics and profiling data from running Java applications. It causes insignificant performance overhead in the running application, so it can be enabled in high load production environaments.
 
 ## Events
 JFR collects data in events. An event is comprised of a name, timestamp and its payload. The payload usually has information about the stack trace, CPU usage, head size before and after the event, etc. There are 3 types of JRF events:
