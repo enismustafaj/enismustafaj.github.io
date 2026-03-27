@@ -1,24 +1,24 @@
 theme = "apollo"
 taxonomies = [{ name = "tags" }]
-
-# The URL the site will be built for
 base_url = "https://enismustafaj.github.io"
-
-# Whether to automatically compile all Sass files in the sass directory
 compile_sass = false
 
 [markdown]
-# Whether to do syntax highlighting
-# Theme can be customised by setting the `highlight_theme` variable to a theme supported by Zola
-highlight_code = true
+github_alerts = false
+insert_anchor_links = "right"
+
+[markdown.highlighting]
+error_on_missing_language = false
+style = "inline"
+theme = "github-dark"
 
 [extra]
-# Put all your custom variables here
-theme = "dark"
+theme = "auto"
 socials = [
   { name = "github", url = "https://github.com/enismustafaj/", icon = "github" }
 ]
 menu = [
-  { name = "about", url = "/about", weight = 1 },
-  { name = "posts", url = "/posts", weight = 2 },
+    { name = "home", url = "/", weight = 1 },
+    { name = "about", url = "/about", weight = 2 },
+    { name = "posts", url = "/posts", weight = 3 },
 ]

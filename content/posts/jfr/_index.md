@@ -2,8 +2,6 @@
 title = "Introduction to JDK Flight Recorder"
 +++
 
-# Intro to JDK Flight Recorder
-
 ## Overview
 JDK Flight Recorder is a tool, integrated in JVM, for collecting diagnostics and profiling data from running Java applications. It causes insignificant performance overhead in the running application, so it can be enabled in high load production environaments.
 

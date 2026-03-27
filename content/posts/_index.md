@@ -8,3 +8,5 @@ insert_anchor_links = "heading"
 [extra]
 comment = true
 +++
+
+* [JDK Flight Recorder](@/posts/jfr/_index.md)
