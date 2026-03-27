@@ -3,7 +3,7 @@ title = "Introduction to JDK Flight Recorder"
 +++
 
 ## Overview
-JDK Flight Recorder is a tool, integrated in JVM, for collecting diagnostics and profiling data from running Java applications. It causes insignificant performance overhead in the running application, so it can be enabled in high load production environaments.
+JDK Flight Recorder is a tool, integrated in JVM, for collecting diagnostics and profiling data from running Java applications. It causes insignificant performance overhead in the running application, so it can be enabled in high-load production environment.
 
 ## Events
 JFR collects data in events. An event is comprised of a name, timestamp and its payload. The payload usually has information about the stack trace, CPU usage, head size before and after the event, etc. There are 3 types of JRF events:
@@ -12,7 +12,7 @@ JFR collects data in events. An event is comprised of a name, timestamp and its 
 2. **Instant Event**: it is logged immediately.
 3. **Sample Event**: it is logged in intervals.
 
-JFR provides built-in events that monitor the behavior of the JVM. Custom events can also be configured programatically that will help you to monitor the behavior of your application running in JVM. To configure a cutom event you need to extend the 
+JFR provides built-in events that monitor the behavior of the JVM. Custom events can also be configured programmatically that will help you to monitor the behavior of your application running in JVM. To configure a custom event you need to extend the 
 `jdk.jfr.Event` abstarct class:
 
 ```java
@@ -55,7 +55,7 @@ In the previoud example we have defined an event that contains information about
         }
     }
 ```
-If you want to record the time taken to execute the business operation which this event record, sorround it by the `begin()` and `end()` method which indicate the beginning of the event and completetion of theoperation.
+If you want to record the time taken to execute the business operation which this event record, surround it by the `begin()` and `end()` method which indicate the beginning of the event and completion of theoperation.
 
 ### Activating JFR
 To activate the JFR in the application JVM is running, you need to include the following options on the run command:
@@ -104,6 +104,6 @@ emu.experimental.jfr.events.PaymentEvent {
   ]
 }
 ```
-which provides us infomration about the duration of the operation, thread in which the opration ran and the stacktrace.
+which provides us information about the duration of the operation, thread in which the operation ran and the stacktrace.
 
 To check out the full source code, go to [Github](https://github.com/enismustafaj/jfr).
