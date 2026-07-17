@@ -9,4 +9,5 @@ insert_anchor_links = "heading"
 comment = true
 +++
 
+* [Profiling HTTP Requests with JFR Events](@/posts/jfr-profiling/_index.md)
 * [JDK Flight Recorder](@/posts/jfr/_index.md)
