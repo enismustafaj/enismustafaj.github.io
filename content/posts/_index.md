@@ -9,5 +9,6 @@ insert_anchor_links = "heading"
 comment = true
 +++
 
+* [spec4j: Centralizing API Contracts with TypeSpec](@/posts/spec4j/_index.md)
 * [Profiling HTTP Requests with JFR Events](@/posts/jfr-profiling/_index.md)
 * [JDK Flight Recorder](@/posts/jfr/_index.md)
