@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" class="dark light">
+
+    <head>
+    
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="base" content="https:&#x2F;&#x2F;enismustafaj.github.io" />
+
+    
+
+    
+
+    
+    
+    
+        <title>
+            
+                Profiling HTTP Requests with JFR Events
+            
+        </title>
+
+        
+            <meta property="og:title"
+                  content="Profiling HTTP Requests with JFR Events" />
+        
+    
+
+    
+        
+    
+
+    
+        
+    
+
+    
+    
+
+    
+    
+        <link href=https://enismustafaj.github.io/fonts.css rel="stylesheet" />
+    
+
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+
+    
+
+    
+    
+
+
+    
+
+    
+    
+
+    
+    
+        <link rel="stylesheet"
+              type="text/css"
+              href="https://enismustafaj.github.io/theme/light.css" />
+        <link rel="stylesheet"
+              type="text/css"
+              href="https://enismustafaj.github.io/theme/dark.css"
+              media="(prefers-color-scheme: dark)" />
+    
+
+    
+        
+        <script src=https://enismustafaj.github.io/js/themetoggle.js></script>
+
+        
+            <script>
+                if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    setTheme("dark");
+                } else {
+                    setTheme("light");
+                }
+            </script>
+        
+    
+
+
+    <link rel="stylesheet"
+          type="text/css"
+          media="screen"
+          href="https://enismustafaj.github.io/main.css" />
+
+    
+
+    
+</head>
+
+
+    <body>
+        
+        <div class="left-content">
+            
+            
+        </div>
+
+        <div class="content">
+            <nav>
+    <div class="left-nav">
+        
+            <a href=https:&#x2F;&#x2F;enismustafaj.github.io></a>
+        
+
+
+        <div class="socials">
+            
+                
+            
+            
+                <a rel='me' href="https:&#x2F;&#x2F;github.com&#x2F;enismustafaj&#x2F;" class="social">
+                    <img alt="github"
+                         src="https://enismustafaj.github.io/icons/social/github.svg" />
+                </a>
+            
+        </div>
+    </div>
+
+    <div class="right-nav">
+        
+            <a href=https://enismustafaj.github.io style="margin-right: 0.5em">home</a>
+        
+            <a href=https://enismustafaj.github.io/about style="margin-right: 0.5em">about</a>
+        
+
+        
+
+        
+        
+    </div>
+</nav>
+
+
+            
+            
+    
+    <div class="visible-element-observer-root" data-selector="main article p">
+        <main>
+            <article>
+                <div class="title">
+                    
+                    
+    
+        <div class="page-header">
+            Profiling HTTP Requests with JFR Events
+        </div>
+    
+
+
+                    <div class="meta">
+                        
+                            Posted on <time>2026-07-17</time>
+                        
+
+
+                        
+
+                        
+
+                        
+
+                        
+                        
+
+                        
+                        
+
+                        
+                        
+
+                        
+
+                    </div>
+                </div>
+
+                
+
+                <section class="body">
+                    <h2 id="what-is-profiling"><a class="zola-anchor" href="#what-is-profiling" aria-label="Anchor link for: what-is-profiling">What is profiling?</a></h2>
+<p>Profiling is the practice of observing a running program to figure out where it actually spends its time and resources, as opposed to guessing based on how the code reads. For a web application, that usually means: which methods dominate CPU time while a request is being handled? A profiler answers that by periodically sampling the call stack of a thread while it runs, and aggregating those samples into a picture of "hot" code paths.</p>
+<h2 id="how-i-m-using-jfr-events"><a class="zola-anchor" href="#how-i-m-using-jfr-events" aria-label="Anchor link for: how-i-m-using-jfr-events">How I'm using JFR events</a></h2>
+<p><a rel="external" href="https://openjdk.org/jeps/328">JDK Flight Recorder</a> (JFR) already knows how to do this sampling — it's built into the JVM and ships events like <code>jdk.ExecutionSample</code>, which periodically records the stack trace of a running thread. Instead of running one long, always-on recording, I wanted a profile scoped to a single HTTP request: start a recording when the request comes in, stop it when the request finishes, and export just that slice.</p>
+<p>The mechanics, briefly:</p>
+<ol>
+<li>A Spring <code>HandlerInterceptor</code> starts a <code>jdk.jfr.Recording</code> in <code>preHandle</code>, enabling the execution-sampling event.</li>
+<li>In <code>afterCompletion</code>, the recording is stopped and handed off asynchronously to be dumped to a temporary <code>.jfr</code> file and read back with <code>jdk.jfr.consumer.RecordingFile</code>.</li>
+<li>The events are filtered down to the thread that handled the request, then converted into a <a rel="external" href="https://github.com/google/pprof">pprof</a> profile so they can be visualized as a flame graph or pushed to an observability backend.</li>
+</ol>
+<p>Each request produces its own small profile, so the sampling cost is scoped to the request instead of running continuously across the whole application.</p>
+<h2 id="a-wrinkle-safepoint-bias"><a class="zola-anchor" href="#a-wrinkle-safepoint-bias" aria-label="Anchor link for: a-wrinkle-safepoint-bias">A wrinkle: safepoint bias</a></h2>
+<p>The classic <code>jdk.ExecutionSample</code> event samples via a mechanism tied to <em>safepoints</em> — points in the code where the JVM can safely inspect a thread's stack. The sampler asks a thread to report its stack the next time it reaches one of these points, rather than at the exact instant the sampling timer fires. Most code hits safepoints constantly (method calls, allocations), so the skew is small. But the JIT compiler can strip safepoint checks out of tight, provably-terminating loops — which means that code can go completely unsampled, even while it's clearly consuming CPU. This is called <em>safepoint bias</em>, and it systematically under-represents exactly the kind of hot, optimized loops you'd most want visibility into.</p>
+<p>JDK 25 introduces <a rel="external" href="https://openjdk.org/jeps/509"><code>jdk.CPUTimeSample</code></a> (JEP 509), which samples via a per-thread CPU-time signal instead of waiting for a safepoint — so it doesn't have this blind spot. It's Linux-only for now, so I use it there and fall back to <code>jdk.ExecutionSample</code> elsewhere.</p>
+<p>I'm not going to try to re-explain safepoints better than the person who already has — <a rel="external" href="https://mostlynerdless.de/blog/2023/07/31/the-inner-workings-of-safepoints/">The Inner Workings of Safepoints</a> on mostlynerdless.de is the best writeup I've found on how safepoints actually work under the hood. The same author also wrote a two-part series on JEP 509 itself, which is worth reading if you want the implementation details behind <code>jdk.CPUTimeSample</code>:</p>
+<ul>
+<li><a rel="external" href="https://mostlynerdless.de/blog/2025/06/11/java-25s-new-cpu-time-profiler-1/">Java 25's new CPU-Time Profiler (1)</a></li>
+<li><a rel="external" href="https://mostlynerdless.de/blog/2025/07/30/java-25s-new-cpu-time-profiler-the-implementation-2/">Java 25's new CPU-Time Profiler: The Implementation (2)</a></li>
+</ul>
+
+                </section>
+            </article>
+        </main>
+    </div>
+
+
+
+            
+                
+            
+
+            
+        </div>
+
+        <div class="right-content">
+            
+    
+    
+
+        </div>
+        
+    </body>
+
+</html>

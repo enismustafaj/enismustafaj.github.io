@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en" class="dark light">
+
+    <head>
+    
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="base" content="https:&#x2F;&#x2F;enismustafaj.github.io" />
+
+    
+
+    
+
+    
+    
+    
+        <title>
+            
+                Introduction to JDK Flight Recorder
+            
+        </title>
+
+        
+            <meta property="og:title"
+                  content="Introduction to JDK Flight Recorder" />
+        
+    
+
+    
+        
+    
+
+    
+        
+    
+
+    
+    
+
+    
+    
+        <link href=https://enismustafaj.github.io/fonts.css rel="stylesheet" />
+    
+
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+
+    
+
+    
+    
+
+
+    
+
+    
+    
+
+    
+    
+        <link rel="stylesheet"
+              type="text/css"
+              href="https://enismustafaj.github.io/theme/light.css" />
+        <link rel="stylesheet"
+              type="text/css"
+              href="https://enismustafaj.github.io/theme/dark.css"
+              media="(prefers-color-scheme: dark)" />
+    
+
+    
+        
+        <script src=https://enismustafaj.github.io/js/themetoggle.js></script>
+
+        
+            <script>
+                if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    setTheme("dark");
+                } else {
+                    setTheme("light");
+                }
+            </script>
+        
+    
+
+
+    <link rel="stylesheet"
+          type="text/css"
+          media="screen"
+          href="https://enismustafaj.github.io/main.css" />
+
+    
+
+    
+</head>
+
+
+    <body>
+        
+        <div class="left-content">
+            
+            
+        </div>
+
+        <div class="content">
+            <nav>
+    <div class="left-nav">
+        
+            <a href=https:&#x2F;&#x2F;enismustafaj.github.io></a>
+        
+
+
+        <div class="socials">
+            
+                
+            
+            
+                <a rel='me' href="https:&#x2F;&#x2F;github.com&#x2F;enismustafaj&#x2F;" class="social">
+                    <img alt="github"
+                         src="https://enismustafaj.github.io/icons/social/github.svg" />
+                </a>
+            
+        </div>
+    </div>
+
+    <div class="right-nav">
+        
+            <a href=https://enismustafaj.github.io style="margin-right: 0.5em">home</a>
+        
+            <a href=https://enismustafaj.github.io/about style="margin-right: 0.5em">about</a>
+        
+
+        
+
+        
+        
+    </div>
+</nav>
+
+
+            
+            
+    
+    <div class="visible-element-observer-root" data-selector="main article p">
+        <main>
+            <article>
+                <div class="title">
+                    
+                    
+    
+        <div class="page-header">
+            Introduction to JDK Flight Recorder
+        </div>
+    
+
+
+                    <div class="meta">
+                        
+                            Posted on <time>2026-03-21</time>
+                        
+
+
+                        
+
+                        
+
+                        
+
+                        
+                        
+
+                        
+                        
+
+                        
+                        
+
+                        
+
+                    </div>
+                </div>
+
+                
+
+                <section class="body">
+                    <h2 id="overview"><a class="zola-anchor" href="#overview" aria-label="Anchor link for: overview">Overview</a></h2>
+<p>JDK Flight Recorder is a tool, integrated in JVM, for collecting diagnostics and profiling data from running Java applications. It causes insignificant performance overhead in the running application, so it can be enabled in high-load production environment.</p>
+<h2 id="events"><a class="zola-anchor" href="#events" aria-label="Anchor link for: events">Events</a></h2>
+<p>JFR collects data in events. An event is comprised of a name, timestamp and its payload. The payload usually has information about the stack trace, CPU usage, head size before and after the event, etc. There are 3 types of JRF events:</p>
+<ol>
+<li><strong>Duration Event</strong>: it is logged only when it is completed. Setting a threshold for this type of event, would only record the events that exceed the threshold. This oprtion is not available for the other types of events.</li>
+<li><strong>Instant Event</strong>: it is logged immediately.</li>
+<li><strong>Sample Event</strong>: it is logged in intervals.</li>
+</ol>
+<p>JFR provides built-in events that monitor the behavior of the JVM. Custom events can also be configured programmatically that will help you to monitor the behavior of your application running in JVM. To configure a custom event you need to extend the
+<code>jdk.jfr.Event</code> abstarct class:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="java"><span class="giallo-l"><span>@</span><span style="color: #F97583;">Category</span><span>(</span><span style="color: #9ECBFF;">&quot;Payment&quot;</span><span>)</span></span>
+<span class="giallo-l"><span>@</span><span style="color: #F97583;">Label</span><span>(</span><span style="color: #9ECBFF;">&quot;PaymentCreation&quot;</span><span>)</span></span>
+<span class="giallo-l"><span style="color: #F97583;">public class</span><span style="color: #B392F0;"> PaymentEvent</span><span style="color: #F97583;"> extends</span><span> jdk.jfr.</span><span style="color: #B392F0;">Event</span><span> {</span></span>
+<span class="giallo-l"><span>    @</span><span style="color: #F97583;">Description</span><span>(</span><span style="color: #9ECBFF;">&quot;Payment ID&quot;</span><span>)</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    private</span><span> String paymentId;</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span>    @</span><span style="color: #F97583;">Description</span><span>(</span><span style="color: #9ECBFF;">&quot;Amount&quot;</span><span>)</span></span>
+<span class="giallo-l"><span style="color: #F97583;">    private double</span><span> amount;</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #F97583;">    public void</span><span style="color: #B392F0;"> setPaymentId</span><span>(String</span><span style="color: #FFAB70;"> paymentId</span><span>) {</span></span>
+<span class="giallo-l"><span style="color: #79B8FF;">        this</span><span>.paymentId</span><span style="color: #F97583;"> =</span><span> paymentId;</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"><span>    </span></span>
+<span class="giallo-l"><span style="color: #F97583;">    public void</span><span style="color: #B392F0;"> setAmount</span><span>(</span><span style="color: #F97583;">double</span><span style="color: #FFAB70;"> amount</span><span>) {</span></span>
+<span class="giallo-l"><span style="color: #79B8FF;">        this</span><span>.amount</span><span style="color: #F97583;"> =</span><span> amount;</span></span>
+<span class="giallo-l"><span>    }</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>In the previoud example we have defined an event that contains information about the payment id and amount. To record this event, the <code>commit()</code> method needs to be called:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="java"><span class="giallo-l"><span style="color: #F97583;">    public void</span><span style="color: #B392F0;"> execute</span><span>(PaymentModel paymentModel) {</span></span>
+<span class="giallo-l"><span style="color: #F97583;">        try</span><span> {</span></span>
+<span class="giallo-l"><span>            </span></span>
+<span class="giallo-l"><span style="color: #6A737D;">            // initialize the event</span></span>
+<span class="giallo-l"><span>            PaymentEvent paymentEvent</span><span style="color: #F97583;"> = new</span><span style="color: #B392F0;"> PaymentEvent</span><span>();</span></span>
+<span class="giallo-l"><span>            paymentEvent.</span><span style="color: #B392F0;">setPaymentId</span><span>(paymentModel.</span><span style="color: #B392F0;">paymentId</span><span>());</span></span>
+<span class="giallo-l"><span>            paymentEvent.</span><span style="color: #B392F0;">setAmount</span><span>(paymentModel.</span><span style="color: #B392F0;">amount</span><span>());</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span>            paymentEvent.</span><span style="color: #B392F0;">begin</span><span>();</span></span>
+<span class="giallo-l"><span>            Thread.</span><span style="color: #B392F0;">sleep</span><span>(</span><span style="color: #79B8FF;">100</span><span>);</span></span>
+<span class="giallo-l"><span>            paymentEvent.</span><span style="color: #B392F0;">end</span><span>();</span></span>
+<span class="giallo-l"><span>            paymentEvent.</span><span style="color: #B392F0;">commit</span><span>();</span></span>
+<span class="giallo-l"><span>        }</span><span style="color: #F97583;"> catch</span><span> (InterruptedException</span><span style="color: #FFAB70;"> e</span><span>) {</span></span>
+<span class="giallo-l"><span>            Thread.</span><span style="color: #B392F0;">currentThread</span><span>().</span><span style="color: #B392F0;">interrupt</span><span>();</span></span>
+<span class="giallo-l"><span>        }</span></span>
+<span class="giallo-l"><span>    }</span></span></code></pre>
+<p>If you want to record the time taken to execute the business operation which this event record, surround it by the <code>begin()</code> and <code>end()</code> method which indicate the beginning of the event and completion of theoperation.</p>
+<h3 id="activating-jfr"><a class="zola-anchor" href="#activating-jfr" aria-label="Anchor link for: activating-jfr">Activating JFR</a></h3>
+<p>To activate the JFR in the application JVM is running, you need to include the following options on the run command:
+<code>java -XX:+FlightRecorder App</code>,
+or include these JVM args into the run task on a Gradle project, build file:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="groovy"><span class="giallo-l"><span>run {</span></span>
+<span class="giallo-l"><span>    jvmArgs </span><span style="color: #F97583;">=</span><span> [</span></span>
+<span class="giallo-l"><span style="color: #9ECBFF;">        &quot;-XX:StartFlightRecording=filename=events.jfr,settings=profile&quot;</span></span>
+<span class="giallo-l"><span>    ]</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>The settings option defines the way the data will be collected. There are 2 types of settings:</p>
+<ol>
+<li>
+<p><strong>Default</strong>
+JFR will collect basic GC, CPU, and Safepoint information. It is recommended to be used for continuous 24/7 production monitoring.</p>
+</li>
+<li>
+<p><strong>Profile</strong>
+The JVM starts sampling the execution stacks of your threads frequently. This allows you to see exactly which methods are consuming the most CPU. A drawback of this option is that it captures much more data than default option. In a high-throughput environment, it can result in very large .jfr files in a short amount of time.</p>
+</li>
+</ol>
+<h3 id="analyzing-jfr-files"><a class="zola-anchor" href="#analyzing-jfr-files" aria-label="Anchor link for: analyzing-jfr-files">Analyzing JFR Files</a></h3>
+<p>Analyzing the .jfr record files produced by the JDK Flight Recorder, we can use Java Mission Control tool, which is a graphical user interface tool, or the jfr cli. To get a summary of the recorded events, run the following command:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B392F0;">jfr</span><span style="color: #9ECBFF;"> summary</span><span style="color: #F97583;"> &lt;</span><span style="color: #9ECBFF;">filenam</span><span>e</span><span style="color: #F97583;">&gt;</span></span></code></pre>
+<p>To fetch the details of recorded event, run the following command:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="shellscript"><span class="giallo-l"><span style="color: #B392F0;">jfr</span><span style="color: #9ECBFF;"> print</span><span style="color: #79B8FF;"> --events</span><span style="color: #F97583;"> &lt;</span><span style="color: #9ECBFF;">filte</span><span>r</span><span style="color: #F97583;">&gt; &lt;</span><span style="color: #9ECBFF;">filenam</span><span>e</span><span style="color: #F97583;">&gt;</span></span></code></pre>
+<p>For our payment application example, the output of the previous command is:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="json"><span class="giallo-l"><span>emu.experimental.jfr.events.PaymentEvent {</span></span>
+<span class="giallo-l"><span style="color: #FDAEB7;font-style: italic;">  startTime = 00</span><span>:</span><span style="color: #79B8FF;">45</span><span style="color: #FDAEB7;font-style: italic;">:</span><span style="color: #79B8FF;">18.223</span><span style="color: #FDAEB7;font-style: italic;"> (</span><span style="color: #79B8FF;">2026-03-27</span><span style="color: #FDAEB7;font-style: italic;">)</span></span>
+<span class="giallo-l"><span style="color: #FDAEB7;font-style: italic;">  duration =</span><span style="color: #79B8FF;"> 103</span><span style="color: #FDAEB7;font-style: italic;"> ms</span></span>
+<span class="giallo-l"><span style="color: #FDAEB7;font-style: italic;">  paymentId =</span><span style="color: #9ECBFF;"> &quot;id1&quot;</span></span>
+<span class="giallo-l"><span style="color: #FDAEB7;font-style: italic;">  amount =</span><span style="color: #79B8FF;"> 3.14</span></span>
+<span class="giallo-l"><span style="color: #FDAEB7;font-style: italic;">  eventThread =</span><span style="color: #9ECBFF;"> &quot;http-nio-8080-exec-1&quot;</span><span style="color: #FDAEB7;font-style: italic;"> (javaThreadId =</span><span style="color: #79B8FF;"> 45</span><span style="color: #FDAEB7;font-style: italic;">)</span></span>
+<span class="giallo-l"><span style="color: #FDAEB7;font-style: italic;">  stackTrace =</span><span> [</span></span>
+<span class="giallo-l"><span style="color: #FDAEB7;font-style: italic;">    emu.experimental.jfr.domain.CreatePaymentUseCase.execute(PaymentModel) line:</span><span style="color: #79B8FF;"> 19</span></span>
+<span class="giallo-l"><span style="color: #FDAEB7;font-style: italic;">    emu.experimental.jfr.rest.PaymentController.makePayment(PaymentRequest) line:</span><span style="color: #79B8FF;"> 29</span></span>
+<span class="giallo-l"><span style="color: #FDAEB7;font-style: italic;">    jdk.internal.reflect.DirectMethodHandleAccessor.invoke(Object</span><span>,</span><span style="color: #FDAEB7;font-style: italic;"> Object</span><span>[]</span><span style="color: #FDAEB7;font-style: italic;">) line:</span><span style="color: #79B8FF;"> 104</span></span>
+<span class="giallo-l"><span style="color: #FDAEB7;font-style: italic;">    java.lang.reflect.Method.invoke(Object</span><span>,</span><span style="color: #FDAEB7;font-style: italic;"> Object</span><span>[]</span><span style="color: #FDAEB7;font-style: italic;">) line:</span><span style="color: #79B8FF;"> 565</span></span>
+<span class="giallo-l"><span style="color: #FDAEB7;font-style: italic;">    org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(Object</span><span>[]</span><span style="color: #FDAEB7;font-style: italic;">) line:</span><span style="color: #79B8FF;"> 252</span></span>
+<span class="giallo-l"><span>  ]</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>which provides us information about the duration of the operation, thread in which the operation ran and the stacktrace.</p>
+<p>To check out the full source code, go to <a rel="external" href="https://github.com/enismustafaj/jfr">Github</a>.</p>
+
+                </section>
+            </article>
+        </main>
+    </div>
+
+
+
+            
+                
+            
+
+            
+        </div>
+
+        <div class="right-content">
+            
+    
+    
+
+        </div>
+        
+    </body>
+
+</html>
