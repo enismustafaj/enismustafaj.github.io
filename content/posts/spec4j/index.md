@@ -1,5 +1,6 @@
 +++
 title = "spec4j: Centralizing API Contracts with TypeSpec"
+date = 2026-08-19
 +++
 
 ## The problem

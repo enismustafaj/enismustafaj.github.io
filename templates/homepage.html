@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block main_content %}
+    <main>
+        <article>
+            <section class="body">
+                {{ post_macros::page_header(title=section.title) }}
+                {{ section.content | safe }}
+            </section>
+        </article>
+
+        {% set posts = get_section(path="posts/_index.md") %}
+        <main class="post-list">
+            {{ post_macros::list_posts(pages=posts.pages) }}
+        </main>
+    </main>
+{% endblock main_content %}

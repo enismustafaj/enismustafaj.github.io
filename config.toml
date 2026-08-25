@@ -20,5 +20,4 @@ socials = [
 menu = [
     { name = "home", url = "/", weight = 1 },
     { name = "about", url = "/about", weight = 2 },
-    { name = "posts", url = "/posts", weight = 3 },
 ]
