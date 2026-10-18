@@ -21,5 +21,4 @@ template = "homepage.html"
 
 <div class="homepage-hero">
     <h3 class="homepage-hero-title">Enis Mustafaj</h3>
-    <p class="homepage-hero-subtitle">Expressing creativity through code!</p>
 </div>
