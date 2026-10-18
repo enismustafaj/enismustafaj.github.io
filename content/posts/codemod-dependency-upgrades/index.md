@@ -1,5 +1,5 @@
 +++
-title = "Dependency Upgrades with Codemods and AI"
+title = "Dependencies, Codemods and AI"
 date = 2026-10-18
 +++
 
