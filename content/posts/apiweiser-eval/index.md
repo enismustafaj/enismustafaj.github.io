@@ -9,7 +9,7 @@ how codemods and the tool I am building, [Apiweiser](https://apiweiser-cli-fe.ve
 
 ## Apiweiser Evaluation Setup
 
-#### Machine specs
+### Machine specs
 
 | | |
 |---|---|
@@ -22,7 +22,7 @@ how codemods and the tool I am building, [Apiweiser](https://apiweiser-cli-fe.ve
 | **Container limits** | 2 CPUs, 4 GB memory per run |
 
 
-#### Evaluation Framework
+### Evaluation Framework
 I used the [Harbor](https://www.harborframework.com/) framework to run my evaluation scenarios. I chose Harbor because of how simple it is to configure the evaluation environments and scenarios. This evaluation consisted of 3 scenarios, as follows:
 
 | Scenario | What the agent gets | Codemod |
