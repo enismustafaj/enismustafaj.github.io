@@ -138,3 +138,9 @@ These numbers come from my own machine and my own setup, so before you trust the
 5. **One model and one harness.** All the runs used Codex with the same model. Other agents, models or reasoning effort settings could give different results, both for the plain agent and with the skill.
 
 6. **I wrote the tasks and the graders.** The hidden tests check what I think matters in each upgrade, like the async thunk actions or the lint rules. A different person could write stricter or looser checks and get different pass rates.
+
+## Conclusion
+
+Apiweiser helps the agent in two ways. The `plan` step tells it exactly which versions have to move, so it stops upgrading packages that do not need to change and avoids most of the peer-dependency conflicts. The codemod applies the API changes the same way every time, so the upgrade passes every run instead of missing some of them. Writing the codemod is the expensive part, but it is paid once.
+
+If you want to try it on your own codebase, you can check out [Apiweiser](https://apiweiser-cli-fe.vercel.app/). I would appreciate any feedback!
