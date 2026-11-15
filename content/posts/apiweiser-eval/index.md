@@ -3,8 +3,8 @@ title = "\"Trust-me-bro\" Codemod Benchmarks"
 date = 2026-11-16
 +++
 
-In the previous [post](https://enismustafaj.github.io/posts/codemod-dependency-upgrades/) I talked about the "pain" that dependency upgrade process introduces to devs life and
-how codemods and the tool I am building, [Apiweiser](https://apiweiser-cli-fe.vercel.app/), can significantly improve the process. This time I want to present some metrics I gathered based on some evaluations I ran in my machine, to verify my claims I talked about previously.
+In the previous [post](https://enismustafaj.github.io/posts/codemod-dependency-upgrades/) I talked about the "pain" that the dependency upgrade process brings into developers' lives and
+how codemods and the tool I am building, [Apiweiser](https://apiweiser-cli-fe.vercel.app/), can significantly improve the process. This time I want to present some metrics I gathered based on some evaluations I ran on my machine, to verify the claims I made there.
 
 
 ## Apiweiser Evaluation Setup
@@ -23,7 +23,7 @@ how codemods and the tool I am building, [Apiweiser](https://apiweiser-cli-fe.ve
 
 
 #### Evaluation Framework
-I used the [Harbor](https://www.harborframework.com/) framework to run my evaluation scenarios. I chose Harbor was because of to its simplicity in the  evaluation environment scenario configuration. This evaluation consisted of 3 scenarios as following: 
+I used the [Harbor](https://www.harborframework.com/) framework to run my evaluation scenarios. I chose Harbor because of how simple it is to configure the evaluation environments and scenarios. This evaluation consisted of 3 scenarios, as follows:
 
 | Scenario | What the agent gets | Codemod |
 |---|---|---|
@@ -82,26 +82,26 @@ The same rules apply to every task:
 
 ## Evaluation Results
 
-The following table show the coolected metrics from all the runs combined togert per task per scenario.
+The following table shows the metrics collected from all the runs, combined per task and scenario.
 
 | Scenario | Task                                      | Passed  | Cost per run (mean) | Agent time (mean) | Turns (mean) |
 | -------- | ----------------------------------------- | ------- | ------------------- | ----------------- | ------------ |
 | A        | lot-redux-toolkit-1-to-2                  | **5/5** | $0.0068             | 44s               | 12           |
-| A        | nest-starter-nestjs-7-to-8                | **0/5** | $0.0060             | 88s               | 18
-| A        | node-express-realworld-prisma-4-to-7      | **5/5** | $0.0179             | 124s              | 37
-| A        | node-typescript-boilerplate-eslint-8-to-9 | **4/5** | $0.0146             | 118s              | 28
-| A        | openai-quickstart-openai-3-to-4           | **4/5** | $0.0047             | 37s               | 13
-| A        | ynab-mcp-zod-3-to-4                       | **5/5** | $0.0086             | 108s              | 13
-| B        | lot-redux-toolkit-1-to-2                  | **5/5** | $0.0299             | 187s              | 37
-| B        | nest-starter-nestjs-7-to-8                | **5/5** | $0.0173             | 147s              | 25
-| B        | node-express-realworld-prisma-4-to-7      | **5/5** | $0.0264             | 246s              | 34
-| B        | node-typescript-boilerplate-eslint-8-to-9 | **5/5** | $0.0206             | 202s              | 30
-| B        | openai-quickstart-openai-3-to-4           | **4/5** | $0.0249             | 181s              | 41
-| B        | ynab-mcp-zod-3-to-4                       | **5/5** | $0.0407             | 297s              | 44
-| C        | lot-redux-toolkit-1-to-2                  | **5/5** | $0.0083             | 61s               | 13
-| C        | nest-starter-nestjs-7-to-8                | **5/5** | $0.0064             | 92s               | 10
-| C        | openai-quickstart-openai-3-to-4           | **5/5** | $0.0091             | 71s               | 18
-| C        | ynab-mcp-zod-3-to-4                       | **5/5** | $0.0170             | 148s              | 23
+| A        | nest-starter-nestjs-7-to-8                | **0/5** | $0.0060             | 88s               | 18           |
+| A        | node-express-realworld-prisma-4-to-7      | **5/5** | $0.0179             | 124s              | 37           |
+| A        | node-typescript-boilerplate-eslint-8-to-9 | **4/5** | $0.0146             | 118s              | 28           |
+| A        | openai-quickstart-openai-3-to-4           | **4/5** | $0.0047             | 37s               | 13           |
+| A        | ynab-mcp-zod-3-to-4                       | **5/5** | $0.0086             | 108s              | 13           |
+| B        | lot-redux-toolkit-1-to-2                  | **5/5** | $0.0299             | 187s              | 37           |
+| B        | nest-starter-nestjs-7-to-8                | **5/5** | $0.0173             | 147s              | 25           |
+| B        | node-express-realworld-prisma-4-to-7      | **5/5** | $0.0264             | 246s              | 34           |
+| B        | node-typescript-boilerplate-eslint-8-to-9 | **5/5** | $0.0206             | 202s              | 30           |
+| B        | openai-quickstart-openai-3-to-4           | **4/5** | $0.0249             | 181s              | 41           |
+| B        | ynab-mcp-zod-3-to-4                       | **5/5** | $0.0407             | 297s              | 44           |
+| C        | lot-redux-toolkit-1-to-2                  | **5/5** | $0.0083             | 61s               | 13           |
+| C        | nest-starter-nestjs-7-to-8                | **5/5** | $0.0064             | 92s               | 10           |
+| C        | openai-quickstart-openai-3-to-4           | **5/5** | $0.0091             | 71s               | 18           |
+| C        | ynab-mcp-zod-3-to-4                       | **5/5** | $0.0170             | 148s              | 23           |
 
 
 ### Observations
