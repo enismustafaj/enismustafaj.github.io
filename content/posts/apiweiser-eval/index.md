@@ -1,6 +1,6 @@
 +++
 title = "\"Trust-me-bro\" Codemod Benchmarks"
-date = 2026-11-01
+date = 2026-11-16
 +++
 
 In the previous [post](https://enismustafaj.github.io/posts/codemod-dependency-upgrades/) I talked about the "pain" that dependency upgrade process introduces to devs life and
