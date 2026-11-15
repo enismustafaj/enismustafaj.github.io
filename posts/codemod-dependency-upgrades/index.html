@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" class="dark light">
+
+    <head>
+    
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="base" content="https:&#x2F;&#x2F;enismustafaj.github.io" />
+
+    
+
+    
+
+    
+    
+    
+        <title>
+            
+                Dependencies, Codemods and AI
+            
+        </title>
+
+        
+            <meta property="og:title"
+                  content="Dependencies, Codemods and AI" />
+        
+    
+
+    
+        
+    
+
+    
+        
+    
+
+    
+    
+
+    
+    
+        <link href=https://enismustafaj.github.io/fonts.css rel="stylesheet" />
+    
+
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+
+    
+
+    
+    
+
+
+    
+
+    
+    
+
+    
+    
+        <link rel="stylesheet"
+              type="text/css"
+              href="https://enismustafaj.github.io/theme/light.css" />
+        <link rel="stylesheet"
+              type="text/css"
+              href="https://enismustafaj.github.io/theme/dark.css"
+              media="(prefers-color-scheme: dark)" />
+    
+
+    
+        
+        <script src=https://enismustafaj.github.io/js/themetoggle.js></script>
+
+        
+            <script>
+                if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    setTheme("dark");
+                } else {
+                    setTheme("light");
+                }
+            </script>
+        
+    
+
+
+    <link rel="stylesheet"
+          type="text/css"
+          media="screen"
+          href="https://enismustafaj.github.io/main.css" />
+
+    
+
+    
+</head>
+
+
+    <body>
+        
+        <div class="left-content">
+            
+            
+        </div>
+
+        <div class="content">
+            <nav>
+    <div class="left-nav">
+        
+            <a href=https:&#x2F;&#x2F;enismustafaj.github.io></a>
+        
+
+
+        <div class="socials">
+            
+                
+            
+            
+                <a rel='me' href="https:&#x2F;&#x2F;github.com&#x2F;enismustafaj&#x2F;" class="social">
+                    <img alt="github"
+                         src="https://enismustafaj.github.io/icons/social/github.svg" />
+                </a>
+            
+        </div>
+    </div>
+
+    <div class="right-nav">
+        
+            <a href=https://enismustafaj.github.io style="margin-right: 0.5em">home</a>
+        
+            <a href=https://enismustafaj.github.io/about style="margin-right: 0.5em">about</a>
+        
+
+        
+
+        
+        
+    </div>
+</nav>
+
+
+            
+            
+    
+    <div class="visible-element-observer-root" data-selector="main article p">
+        <main>
+            <article>
+                <div class="title">
+                    
+                    
+    
+        <div class="page-header">
+            Dependencies, Codemods and AI
+        </div>
+    
+
+
+                    <div class="meta">
+                        
+                            Posted on <time>2026-10-18</time>
+                        
+
+
+                        
+
+                        
+
+                        
+
+                        
+                        
+
+                        
+                        
+
+                        
+                        
+
+                        
+
+                    </div>
+                </div>
+
+                
+
+                <section class="body">
+                    <p>Lately, I have spent too many hours to upgrade dependencies my services use and updating each one of them and the dependencies they rely on, just to figure out the whole underlying framework has to be migrated to the new major version so that the new packages would not have "critical" vulnerabilities. Developers have to update dependencies to patch vulnerabilities, adopt new APIs or replace deprecated ones, and when organizations require "zero-vulnerability" versions, that work takes time away from building features for customers.</p>
+<h2 id="existing-tools"><a class="zola-anchor" href="#existing-tools" aria-label="Anchor link for: existing-tools">Existing tools</a></h2>
+<p>There are a few tools in the market, usually integrated into the codebase hosting platform, such as Dependabot and Renovate, that provide developers with new available and vulnerability-free versions. They would either send you a daily/weekly report with all the necessary changes and even raise a Code Changes for you. However, this approach doe not really solve the whole problem, as a few challenges persist.</p>
+<h2 id="existing-challenges"><a class="zola-anchor" href="#existing-challenges" aria-label="Anchor link for: existing-challenges">Existing challenges</a></h2>
+<p>The existing tools that try to assist developers in keeping their dependencies up to date bring challenges such as:</p>
+<ol>
+<li>
+<p><strong>Version upgrades don’t indicate code changes.</strong>  Knowing only the version to which you need to upgrade does not make your life easier.  Every week I get the report from Dependabot in Github with the new version of my vulnerable packages I use, but as a engineer, usually I have no idea what would the implication be for my codebase.  You will have to go through change logs and release notes to understand the changes, not neccessarily the latest ones if you are updating multiple major versions. So the developers need to make themselves familiar with the new API and its implications to their code base.</p>
+</li>
+<li>
+<p><strong>Version Upgrades need to be performed for each codebase you own.</strong> The same vulnerable/deprecated packages are usually used in every codebase that a team has ownership over. My team owns multiple services and codebases, and we spend quite some time going over each one of them and updating the packages over and over and sometimes asking AI to do it for each one of them results in context overflow and compacting it will result in information loss. Even though the developers get some familiarity on each upgrade, each codebase has its own uniqueness in terms of business domain implementation and the usage of the package itself.</p>
+</li>
+<li>
+<p><strong>Libraries do not operate alone</strong>. Libraries usually are built on top of other packages, and they require their dependencies to be pre-installed. Upgrading the version of one library in your codebase could break the constraints that were set regarding its peer dependencies, as it is called in Javascript/Typescript world.</p>
+</li>
+<li>
+<p><strong>The latest change logs do not tell the whole story</strong>. The more major versions you upgrade, the more challenging it gets to adjust you codebase. Usually, the major version upgrades introduce breaking changes in the library APIs and jumping more than one means that you need to review all the versions in between.</p>
+</li>
+</ol>
+<h2 id="codemod-to-the-rescue"><a class="zola-anchor" href="#codemod-to-the-rescue" aria-label="Anchor link for: codemod-to-the-rescue">Codemod to the rescue</a></h2>
+<h4 id="what-is-a-codemod"><a class="zola-anchor" href="#what-is-a-codemod" aria-label="Anchor link for: what-is-a-codemod">What is a Codemod?</a></h4>
+<p>Codemod (short for “code modification”) is a package of code transformation. It works with the Abstract Syntax Tree (AST) of the codebase by parsing, transforming, and generating the new version of the code. It makes precise code modifications without breaking unrelated code to the rules defined in the Codemod. More about Codemod <a rel="external" href="https://codemod.com/blog/what-are-codemods">here</a>.</p>
+<h4 id="codemod-dependencies-and-ai"><a class="zola-anchor" href="#codemod-dependencies-and-ai" aria-label="Anchor link for: codemod-dependencies-and-ai">Codemod, Dependencies and AI</a></h4>
+<p>The API changes that the new version of the packages introduces are syntactically the same across codebases. This is what makes the codemod approach very useful. To apply the new version's API change, you need to know how the current version is used in the codebase, like what api surface is used. In addition, you need to note down all the breaking changes on the change logs and release notes of those libraries. Regarding the former, static code analysis tools can be used to parse the code in "Abstract Syntax Tree" structure and finding all the usages of the dependency you want to upgrade. Regrading the latter, AI can be utilized to make this process faster, since LLM models are quite good in gathering and summarizing information. Having all this information at hand as context for the LLM, AI agents harnesses, specialized in crafting codemods, can be used create the codemod package. Some of the benefits of this approach are:</p>
+<ol>
+<li>
+<p><strong>Deterministic and repeatable</strong>. The same input always produces the same output. Run it again after a rebase, on a new branch, or after a teammate added code that uses the old API, and you get a consistent result. Asking an agent twice can give you two different answers.</p>
+</li>
+<li>
+<p><strong>Tested before it touches your code</strong>. A codemod comes with before/after test fixtures, so the transformation is checked on its own, independently of whether your project's test suite happens to cover the changed code.</p>
+</li>
+<li>
+<p><strong>Reusable across projects</strong>. A codemod produced by an agent helps one repo, once. A codemod for "lib X, 5 → 6" works for every project making that jump. Codemods can be shared in private, internal to an organization, or public registries, so that they be can accessible by agents.</p>
+</li>
+<li>
+<p><strong>It gets cheaper over time</strong>. The LLM cost is paid once, when the codemod is written. Every later run is a fast, local AST transformation with no tokens, no rate limits, and no timeouts.</p>
+</li>
+<li>
+<p><strong>Precise on large codebases</strong>. An agent working file by file can run out of context, miss files, or drift partway through. A codemod applies the same rule to every file, whether the repo has 10 files or 10,000.</p>
+</li>
+<li>
+<p><strong>Narrow scope, less collateral damage</strong>. A codemod only touches the code patterns it targets. An agent asked to "upgrade X" tends to also reformat, refactor, or "improve" unrelated code, which makes PRs noisy and harder to review.</p>
+</li>
+<li>
+<p><strong>Auditable</strong>. The codemod is stored and versioned, so you can see later exactly what transformation was applied to your code and why.</p>
+</li>
+<li>
+<p><strong>A clear split between judgment and execution</strong>. The AI does the part that needs judgment: reading changelogs and deciding what has to change. Deterministic code does the part that needs reliability: applying the change. Each one does what it's good at.</p>
+</li>
+<li>
+<p><strong>Codemod packages are extendible</strong>. A codemod is just a starting point, not the complete upgrade. New cases can be added when a codebase has a usage pattern the original didn't cover, such as a new import style or an edge case in one project. It's added to the existing codemod as a new rule and test, instead of starting from scratch.</p>
+</li>
+</ol>
+<p>I am building <a rel="external" href="https://apiweiser-cli-fe.vercel.app/">Apiweiser</a> to validate this idea and make dependency upgrades as easy as possible. It only support node projects in Typescript for now. You could run it in your codebases locally and using the model and the coding harness of your choice. I would appreciate any feedback so that this tool becomes more useful and easier to use and reduces as much pain as possible. You can check it out <a rel="external" href="https://apiweiser-cli-fe.vercel.app/">here</a>.</p>
+
+                </section>
+            </article>
+        </main>
+    </div>
+
+
+
+            
+                
+            
+
+            
+        </div>
+
+        <div class="right-content">
+            
+    
+    
+
+        </div>
+        
+    </body>
+
+</html>

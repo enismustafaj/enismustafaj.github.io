@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en" class="dark light">
+
+    <head>
+    
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="base" content="https:&#x2F;&#x2F;enismustafaj.github.io" />
+
+    
+
+    
+
+    
+    
+    
+        <title>
+            
+                spec4j: Centralizing API Contracts with TypeSpec
+            
+        </title>
+
+        
+            <meta property="og:title"
+                  content="spec4j: Centralizing API Contracts with TypeSpec" />
+        
+    
+
+    
+        
+    
+
+    
+        
+    
+
+    
+    
+
+    
+    
+        <link href=https://enismustafaj.github.io/fonts.css rel="stylesheet" />
+    
+
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+
+    
+
+    
+    
+
+
+    
+
+    
+    
+
+    
+    
+        <link rel="stylesheet"
+              type="text/css"
+              href="https://enismustafaj.github.io/theme/light.css" />
+        <link rel="stylesheet"
+              type="text/css"
+              href="https://enismustafaj.github.io/theme/dark.css"
+              media="(prefers-color-scheme: dark)" />
+    
+
+    
+        
+        <script src=https://enismustafaj.github.io/js/themetoggle.js></script>
+
+        
+            <script>
+                if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    setTheme("dark");
+                } else {
+                    setTheme("light");
+                }
+            </script>
+        
+    
+
+
+    <link rel="stylesheet"
+          type="text/css"
+          media="screen"
+          href="https://enismustafaj.github.io/main.css" />
+
+    
+
+    
+</head>
+
+
+    <body>
+        
+        <div class="left-content">
+            
+            
+        </div>
+
+        <div class="content">
+            <nav>
+    <div class="left-nav">
+        
+            <a href=https:&#x2F;&#x2F;enismustafaj.github.io></a>
+        
+
+
+        <div class="socials">
+            
+                
+            
+            
+                <a rel='me' href="https:&#x2F;&#x2F;github.com&#x2F;enismustafaj&#x2F;" class="social">
+                    <img alt="github"
+                         src="https://enismustafaj.github.io/icons/social/github.svg" />
+                </a>
+            
+        </div>
+    </div>
+
+    <div class="right-nav">
+        
+            <a href=https://enismustafaj.github.io style="margin-right: 0.5em">home</a>
+        
+            <a href=https://enismustafaj.github.io/about style="margin-right: 0.5em">about</a>
+        
+
+        
+
+        
+        
+    </div>
+</nav>
+
+
+            
+            
+    
+    <div class="visible-element-observer-root" data-selector="main article p">
+        <main>
+            <article>
+                <div class="title">
+                    
+                    
+    
+        <div class="page-header">
+            spec4j: Centralizing API Contracts with TypeSpec
+        </div>
+    
+
+
+                    <div class="meta">
+                        
+                            Posted on <time>2026-08-19</time>
+                        
+
+
+                        
+
+                        
+
+                        
+
+                        
+                        
+
+                        
+                        
+
+                        
+                        
+
+                        
+
+                    </div>
+                </div>
+
+                
+
+                <section class="body">
+                    <h2 id="the-problem"><a class="zola-anchor" href="#the-problem" aria-label="Anchor link for: the-problem">The problem</a></h2>
+<p>Every team that has run more than a handful of services ends up with the same drift: the API contract lives in three places at once — a hand-written OpenAPI file nobody updates, the actual Spring controller, and whatever the consumer's client code assumes it looks like. They fall out of sync quietly. Someone renames a field on the server, forgets the doc, and a consumer finds out at runtime instead of at compile time.</p>
+<p>The fix I keep coming back to isn't "write better docs," it's removing the place where drift can happen: define the contract once, generate everything else from it, and make the generated code the only way to implement or consume the API.</p>
+<h2 id="spec-first-centralized"><a class="zola-anchor" href="#spec-first-centralized" aria-label="Anchor link for: spec-first-centralized">Spec-first, centralized</a></h2>
+<p>This is usually called contract-first (or spec-first) API development — you write the contract before any implementation exists, and code is generated from it or validated against it, rather than the contract being reverse-engineered from whatever the code happens to do.</p>
+<p>The specific shape I wanted is a dedicated, version-controlled repo that holds nothing but contracts — one folder per API domain — acting as the single source of truth every other repo depends on. This is the same idea as a schema registry: Buf's Schema Registry does it for Protobuf, Confluent's does it for Avro. I wanted the equivalent for a Spring/Java shop using OpenAPI-shaped contracts, so I built <a rel="external" href="https://github.com/marketplace/actions/spec4j">spec4j</a>.</p>
+<h2 id="typespec-briefly"><a class="zola-anchor" href="#typespec-briefly" aria-label="Anchor link for: typespec-briefly">TypeSpec, briefly</a></h2>
+<p>Hand-written OpenAPI YAML is verbose and easy to get subtly wrong — no types, no imports, lots of copy-pasted schema fragments. <a rel="external" href="https://typespec.io/">TypeSpec</a> is a TypeScript-like language for describing APIs that compiles down to OpenAPI (or other formats) instead of being hand-written directly. A model looks like this:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="typespec"><span class="giallo-l"><span style="color: #85E89D;">@tag</span><span>(</span><span style="color: #9ECBFF;">&quot;Users&quot;</span><span>)</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">@route</span><span>(</span><span style="color: #9ECBFF;">&quot;/users&quot;</span><span>)</span></span>
+<span class="giallo-l"><span style="color: #F97583;">interface</span><span style="color: #B392F0;"> UsersApi</span><span> {</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">  @get</span><span style="color: #B392F0;"> list</span><span>(</span><span style="color: #85E89D;">@query</span><span style="color: #FFAB70;"> role</span><span style="color: #F97583;">?:</span><span style="color: #B392F0;"> Role</span><span>,</span><span style="color: #85E89D;"> @query</span><span style="color: #FFAB70;"> cursor</span><span style="color: #F97583;">?:</span><span style="color: #B392F0;"> string</span><span>)</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> UserList</span><span> | </span><span style="color: #B392F0;">ApiError</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">  @get</span><span style="color: #B392F0;"> read</span><span>(</span><span style="color: #85E89D;">@path</span><span style="color: #FFAB70;"> id</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> string</span><span>)</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> User</span><span> | </span><span style="color: #B392F0;">ApiError</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">  @post</span><span style="color: #B392F0;"> create</span><span>(</span><span style="color: #85E89D;">@body</span><span style="color: #FFAB70;"> user</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> User</span><span>)</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> User</span><span> | </span><span style="color: #B392F0;">ApiError</span><span>;</span></span>
+<span class="giallo-l"><span>}</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #F97583;">model</span><span style="color: #B392F0;"> User</span><span> {</span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">  id</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> string</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">  firstName</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> string</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">  lastName</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> string</span><span>;</span></span>
+<span class="giallo-l"><span style="color: #FFAB70;">  roles</span><span style="color: #F97583;">:</span><span style="color: #B392F0;"> Role</span><span>[];</span></span>
+<span class="giallo-l"><span>}</span></span></code></pre>
+<p>That's real types, real optionality (<code>?</code>), real enums, real unions for error responses — checked by the TypeSpec compiler before it ever becomes OpenAPI. <code>tsp compile</code> turns this into an <code>openapi.yaml</code>, which is the intermediate artifact the rest of the pipeline consumes.</p>
+<h2 id="how-spec4j-works"><a class="zola-anchor" href="#how-spec4j-works" aria-label="Anchor link for: how-spec4j-works">How spec4j works</a></h2>
+<p>spec4j is a GitHub Action that takes a <code>.tsp</code> file and turns it into a versioned Java library:</p>
+<ol>
+<li>Compile the spec with <code>tsp compile</code> → OpenAPI 3 document.</li>
+<li>Run <code>openapi-generator</code> against it with the Spring generator → interface + DTO source, no controller bodies, just the contract as Java types.</li>
+<li>Package it as a Maven jar, named after the domain folder.</li>
+<li>Deploy that jar to a Maven registry, at exactly the version given.</li>
+</ol>
+<p>The trigger is a tag, not a merge to main — <code>&lt;domain&gt;/vX.Y.Z</code>:</p>
+<pre class="giallo" style="color: #E1E4E8; background-color: #24292E;"><code data-lang="yaml"><span class="giallo-l"><span style="color: #79B8FF;">on</span><span>:</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">  push</span><span>:</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">    tags</span><span>: [</span><span style="color: #9ECBFF;">&#39;*/v*&#39;</span><span>]</span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: #85E89D;">jobs</span><span>:</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">  publish</span><span>:</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">    runs-on</span><span>:</span><span style="color: #9ECBFF;"> ubuntu-latest</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">    steps</span><span>:</span></span>
+<span class="giallo-l"><span>      -</span><span style="color: #85E89D;"> uses</span><span>:</span><span style="color: #9ECBFF;"> actions/checkout@v4</span></span>
+<span class="giallo-l"><span>      -</span><span style="color: #85E89D;"> id</span><span>:</span><span style="color: #9ECBFF;"> release</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">        run</span><span>:</span><span style="color: #F97583;"> |</span></span>
+<span class="giallo-l"><span style="color: #9ECBFF;">          echo &quot;domain=${GITHUB_REF_NAME%%/*}&quot; &gt;&gt; &quot;$GITHUB_OUTPUT&quot;</span></span>
+<span class="giallo-l"><span style="color: #9ECBFF;">          echo &quot;version=${GITHUB_REF_NAME#*/v}&quot; &gt;&gt; &quot;$GITHUB_OUTPUT&quot;</span></span>
+<span class="giallo-l"><span>      -</span><span style="color: #85E89D;"> uses</span><span>:</span><span style="color: #9ECBFF;"> enismustafaj/spec4j@1.0.3</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">        with</span><span>:</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">          spec-path</span><span>:</span><span style="color: #9ECBFF;"> ${{ steps.release.outputs.domain }}/main.tsp</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">          version</span><span>:</span><span style="color: #9ECBFF;"> ${{ steps.release.outputs.version }}</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">          registry-id</span><span>:</span><span style="color: #9ECBFF;"> gitlab-maven</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">          registry-url</span><span>:</span><span style="color: #9ECBFF;"> https://gitlab.com/api/v4/projects/&lt;id&gt;/packages/maven</span></span>
+<span class="giallo-l"><span style="color: #85E89D;">          registry-token</span><span>:</span><span style="color: #9ECBFF;"> ${{ secrets.GITLAB_TOKEN }}</span></span></code></pre>
+<p><code>git tag users/v1.2.0 &amp;&amp; git push origin users/v1.2.0</code> and a few minutes later <code>com.spec4j:users:1.2.0</code> exists in the registry — a real jar with a real <code>UsersApi</code> interface and real <code>User</code>/<code>Role</code> classes, generated straight from the spec, nothing hand-written. No floating SNAPSHOT, no version drift between what a service implements and what the contract says: whatever version a service depends on is exactly, mechanically, the contract at that tag.</p>
+<p>The problem I set out to solve was never really "generate some Java classes" — <code>openapi-generator</code> already does that. It was making the contract the thing everyone is forced to depend on, instead of the thing everyone quietly reimplements.</p>
+<p>To check out the full source code, go to <a rel="external" href="https://github.com/enismustafaj/spec4j">Github</a>, or see <a rel="external" href="https://github.com/enismustafaj/spec4j-specs">spec4j-specs</a> for a real multi-domain example repo using it.</p>
+
+                </section>
+            </article>
+        </main>
+    </div>
+
+
+
+            
+                
+            
+
+            
+        </div>
+
+        <div class="right-content">
+            
+    
+    
+
+        </div>
+        
+    </body>
+
+</html>

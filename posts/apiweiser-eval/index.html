@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en" class="dark light">
+
+    <head>
+    
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="base" content="https:&#x2F;&#x2F;enismustafaj.github.io" />
+
+    
+
+    
+
+    
+    
+    
+        <title>
+            
+                &quot;Trust-me-bro&quot; Codemod Benchmarks
+            
+        </title>
+
+        
+            <meta property="og:title"
+                  content="&quot;Trust-me-bro&quot; Codemod Benchmarks" />
+        
+    
+
+    
+        
+    
+
+    
+        
+    
+
+    
+    
+
+    
+    
+        <link href=https://enismustafaj.github.io/fonts.css rel="stylesheet" />
+    
+
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+
+    
+
+    
+    
+
+
+    
+
+    
+    
+
+    
+    
+        <link rel="stylesheet"
+              type="text/css"
+              href="https://enismustafaj.github.io/theme/light.css" />
+        <link rel="stylesheet"
+              type="text/css"
+              href="https://enismustafaj.github.io/theme/dark.css"
+              media="(prefers-color-scheme: dark)" />
+    
+
+    
+        
+        <script src=https://enismustafaj.github.io/js/themetoggle.js></script>
+
+        
+            <script>
+                if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                    setTheme("dark");
+                } else {
+                    setTheme("light");
+                }
+            </script>
+        
+    
+
+
+    <link rel="stylesheet"
+          type="text/css"
+          media="screen"
+          href="https://enismustafaj.github.io/main.css" />
+
+    
+
+    
+</head>
+
+
+    <body>
+        
+        <div class="left-content">
+            
+            
+        </div>
+
+        <div class="content">
+            <nav>
+    <div class="left-nav">
+        
+            <a href=https:&#x2F;&#x2F;enismustafaj.github.io></a>
+        
+
+
+        <div class="socials">
+            
+                
+            
+            
+                <a rel='me' href="https:&#x2F;&#x2F;github.com&#x2F;enismustafaj&#x2F;" class="social">
+                    <img alt="github"
+                         src="https://enismustafaj.github.io/icons/social/github.svg" />
+                </a>
+            
+        </div>
+    </div>
+
+    <div class="right-nav">
+        
+            <a href=https://enismustafaj.github.io style="margin-right: 0.5em">home</a>
+        
+            <a href=https://enismustafaj.github.io/about style="margin-right: 0.5em">about</a>
+        
+
+        
+
+        
+        
+    </div>
+</nav>
+
+
+            
+            
+    
+    <div class="visible-element-observer-root" data-selector="main article p">
+        <main>
+            <article>
+                <div class="title">
+                    
+                    
+    
+        <div class="page-header">
+            &quot;Trust-me-bro&quot; Codemod Benchmarks
+        </div>
+    
+
+
+                    <div class="meta">
+                        
+                            Posted on <time>2026-11-16</time>
+                        
+
+
+                        
+
+                        
+
+                        
+
+                        
+                        
+
+                        
+                        
+
+                        
+                        
+
+                        
+
+                    </div>
+                </div>
+
+                
+
+                <section class="body">
+                    <p>In the previous <a rel="external" href="https://enismustafaj.github.io/posts/codemod-dependency-upgrades/">post</a> I talked about the "pain" that the dependency upgrade process brings into developers' lives and
+how codemods and the tool I am building, <a rel="external" href="https://apiweiser-cli-fe.vercel.app/">Apiweiser</a>, can significantly improve the process. This time I want to present some metrics I gathered based on some evaluations I ran on my machine, to verify the claims I made there.</p>
+<h2 id="apiweiser-evaluation-setup"><a class="zola-anchor" href="#apiweiser-evaluation-setup" aria-label="Anchor link for: apiweiser-evaluation-setup">Apiweiser Evaluation Setup</a></h2>
+<h3 id="machine-specs"><a class="zola-anchor" href="#machine-specs" aria-label="Anchor link for: machine-specs">Machine specs</a></h3>
+<table><thead><tr><th></th><th></th></tr></thead><tbody>
+<tr><td><strong>Machine</strong></td><td>MacBook Pro (Mac17,2)</td></tr>
+<tr><td><strong>Chip</strong></td><td>Apple M5, 10 cores (4 performance, 6 efficiency)</td></tr>
+<tr><td><strong>Memory</strong></td><td>24 GB</td></tr>
+<tr><td><strong>OS</strong></td><td>macOS 26.0</td></tr>
+<tr><td><strong>Docker</strong></td><td>Docker Desktop, Docker Engine 29.0.1, VM with 10 CPUs and ~7.7 GB memory (linux/arm64)</td></tr>
+<tr><td><strong>Container image</strong></td><td><code>node:22-bookworm</code> (arm64); Prisma task also runs <code>postgres:16-alpine</code></td></tr>
+<tr><td><strong>Container limits</strong></td><td>2 CPUs, 4 GB memory per run</td></tr>
+</tbody></table>
+<h3 id="evaluation-framework"><a class="zola-anchor" href="#evaluation-framework" aria-label="Anchor link for: evaluation-framework">Evaluation Framework</a></h3>
+<p>I used the <a rel="external" href="https://www.harborframework.com/">Harbor</a> framework to run my evaluation scenarios. I chose Harbor because of how simple it is to configure the evaluation environments and scenarios. All the tasks, graders, job configs and results are available in the <a rel="external" href="https://github.com/enismustafaj/apiweiser-eval">apiweiser-eval</a> repo, so you can check them or run the evaluation yourself. This evaluation consisted of 3 scenarios, as follows:</p>
+<table><thead><tr><th>Scenario</th><th>What the agent gets</th><th>Codemod</th></tr></thead><tbody>
+<tr><td><strong>A: Plain agent</strong></td><td>Codex with the task instruction only. No skills.</td><td>None</td></tr>
+<tr><td><strong>B: Apiweiser Skill, no codemod</strong></td><td>Codex plus the <code>upgrade-dependency</code> and <code>codemod</code> skills and <code>apiweiser-cli</code> (<code>scan</code>, <code>plan</code>, <code>changelog</code>, <code>codemod</code>).</td><td>None published; the agent writes its own codemod wherever the CLI finds call sites.</td></tr>
+<tr><td><strong>C: Apiweiser Skill + published codemod</strong></td><td>Same as B.</td><td>The task's codemod is published under <code>@apiweiser</code>, so <code>apiweiser-cli codemod</code> finds it and the agent runs it instead of writing one. Built for 4 of the 6 tasks (openai, @reduxjs/toolkit, zod, NestJS).</td></tr>
+</tbody></table>
+<p><strong>Task Description:</strong></p>
+<p>The evaluation has six tasks. In each one the agent works on a real open-source repo, pinned to a fixed commit with its dependencies installed, and has to upgrade one library by a major version.</p>
+<p>The same rules apply to every task:</p>
+<ul>
+<li>The target library ends up on the new major version and is installed.</li>
+<li><code>npm install</code> succeeds without peer-dependency errors and without <code>--force</code> or <code>--legacy-peer-deps</code>.</li>
+<li>Any other dependency that has to move along is upgraded, and nothing else is.</li>
+<li>Tests and test config stay as they are.</li>
+<li>Errors aren't hidden with <code>eslint-disable</code> or, where the task says so, with <code>@ts-ignore</code> or <code>as any</code>.</li>
+<li>The agent works without asking questions.</li>
+</ul>
+<ol>
+<li>lot-redux-toolkit-1-to-2</li>
+</ol>
+<ul>
+<li><strong>Starting point:</strong> <code>mocca-dev/lot</code>, a JavaScript app on Redux Toolkit 1.</li>
+<li><strong>What to do:</strong> upgrade <code>@reduxjs/toolkit</code> to 2.x and update the code for it.</li>
+<li><strong>Done when:</strong> <code>npm run lint</code>, <code>npm run build</code> and <code>npm test</code> pass, and every slice gives the same state for the same actions as before. That includes the pending, fulfilled and rejected actions of each async thunk, which a hidden test checks. The vitest config must stay as it is.</li>
+</ul>
+<ol start="2">
+<li>nest-starter-nestjs-7-to-8</li>
+</ol>
+<ul>
+<li><strong>Starting point:</strong> <code>nestjs/typescript-starter</code>, the official NestJS starter, on NestJS 7.</li>
+<li><strong>What to do:</strong> upgrade NestJS to 8 (<code>@nestjs/core</code> on 8.x).</li>
+<li><strong>Done when:</strong> <code>npm run build</code>, <code>npx tsc --noEmit</code>, <code>npm test</code> and <code>npm run test:e2e</code> all pass. The unit and e2e tests and the jest config stay as they are.</li>
+</ul>
+<ol start="3">
+<li>node-express-realworld-prisma-4-to-7</li>
+</ol>
+<ul>
+<li><strong>Starting point:</strong> <code>gothinkster/node-express-realworld-example-app</code>, an Express API built with Nx, on Prisma 4. Upstream, six tests fail because of the order a mock is imported in. The task starts from a one-line fix for that, so the tests pass before the upgrade.</li>
+<li><strong>What to do:</strong> upgrade <code>prisma</code> and <code>@prisma/client</code> to 7.x, crossing three major versions, and update both the code and the Prisma config.</li>
+<li><strong>Done when:</strong> <code>npx nx build</code> and <code>npx nx test</code> pass, and the app still works against a real PostgreSQL database, whose URL is in <code>DATABASE_URL</code>. A hidden test checks the database part.</li>
+</ul>
+<ol start="4">
+<li>node-typescript-boilerplate-eslint-8-to-9</li>
+</ol>
+<ul>
+<li><strong>Starting point:</strong> <code>jsynowiec/node-typescript-boilerplate</code>, a TypeScript template on ESLint 8 with the old config format.</li>
+<li><strong>What to do:</strong> upgrade ESLint to 9, which mainly means moving the config to the new flat-config format.</li>
+<li><strong>Done when:</strong> <code>npm run lint</code>, <code>npm run build</code> and <code>npm test</code> pass, and linting enforces exactly what it did before: the same rule sets, overrides, test-file rules and ignored paths. A hidden test checks that, and the agent must not add a vitest config.</li>
+</ul>
+<ol start="5">
+<li>openai-quickstart-openai-3-to-4</li>
+</ol>
+<ul>
+<li><strong>Starting point:</strong> <code>openai/openai-quickstart-node</code>, OpenAI's small Next.js sample app, on <code>openai</code> 3.</li>
+<li><strong>What to do:</strong> upgrade <code>openai</code> to 4.x, which moves from the old <code>Configuration</code>/<code>OpenAIApi</code> setup to the new <code>OpenAI</code> client.</li>
+<li><strong>Done when:</strong> <code>npm run build</code> passes, and <code>pages/api/generate.js</code> behaves exactly as before: same model, prompt and responses. That includes the error responses for a missing API key, an empty animal name, and an error from the OpenAI API. A hidden test checks this against a fake OpenAI API.</li>
+</ul>
+<ol start="6">
+<li>ynab-mcp-zod-3-to-4</li>
+</ol>
+<ul>
+<li><strong>Starting point:</strong> <code>auzroz/ynab-mcp</code>, an MCP server for YNAB written in TypeScript, on zod 3.</li>
+<li><strong>What to do:</strong> upgrade <code>zod</code> to 4.x using zod 4's own API. Importing from <code>zod/v3</code> isn't allowed.</li>
+<li><strong>Done when:</strong> <code>npm run build</code>, <code>typecheck</code>, <code>lint</code> and <code>test</code> pass, and every tool accepts and rejects the same input as it did under zod 3. A hidden test checks that, and the test, lint and TypeScript config, including the <code>package.json</code> scripts, must stay as they are.</li>
+</ul>
+<h2 id="evaluation-results"><a class="zola-anchor" href="#evaluation-results" aria-label="Anchor link for: evaluation-results">Evaluation Results</a></h2>
+<p>The following table shows the metrics collected from all the runs, combined per task and scenario.</p>
+<table><thead><tr><th>Scenario</th><th>Task</th><th>Passed</th><th>Cost per run (mean)</th><th>Agent time (mean)</th><th>Turns (mean)</th></tr></thead><tbody>
+<tr><td>A</td><td>lot-redux-toolkit-1-to-2</td><td><strong>5/5</strong></td><td>$0.0068</td><td>44s</td><td>12</td></tr>
+<tr><td>A</td><td>nest-starter-nestjs-7-to-8</td><td><strong>0/5</strong></td><td>$0.0060</td><td>88s</td><td>18</td></tr>
+<tr><td>A</td><td>node-express-realworld-prisma-4-to-7</td><td><strong>5/5</strong></td><td>$0.0179</td><td>124s</td><td>37</td></tr>
+<tr><td>A</td><td>node-typescript-boilerplate-eslint-8-to-9</td><td><strong>4/5</strong></td><td>$0.0146</td><td>118s</td><td>28</td></tr>
+<tr><td>A</td><td>openai-quickstart-openai-3-to-4</td><td><strong>4/5</strong></td><td>$0.0047</td><td>37s</td><td>13</td></tr>
+<tr><td>A</td><td>ynab-mcp-zod-3-to-4</td><td><strong>5/5</strong></td><td>$0.0086</td><td>108s</td><td>13</td></tr>
+<tr><td>B</td><td>lot-redux-toolkit-1-to-2</td><td><strong>5/5</strong></td><td>$0.0299</td><td>187s</td><td>37</td></tr>
+<tr><td>B</td><td>nest-starter-nestjs-7-to-8</td><td><strong>5/5</strong></td><td>$0.0173</td><td>147s</td><td>25</td></tr>
+<tr><td>B</td><td>node-express-realworld-prisma-4-to-7</td><td><strong>5/5</strong></td><td>$0.0264</td><td>246s</td><td>34</td></tr>
+<tr><td>B</td><td>node-typescript-boilerplate-eslint-8-to-9</td><td><strong>5/5</strong></td><td>$0.0206</td><td>202s</td><td>30</td></tr>
+<tr><td>B</td><td>openai-quickstart-openai-3-to-4</td><td><strong>4/5</strong></td><td>$0.0249</td><td>181s</td><td>41</td></tr>
+<tr><td>B</td><td>ynab-mcp-zod-3-to-4</td><td><strong>5/5</strong></td><td>$0.0407</td><td>297s</td><td>44</td></tr>
+<tr><td>C</td><td>lot-redux-toolkit-1-to-2</td><td><strong>5/5</strong></td><td>$0.0083</td><td>61s</td><td>13</td></tr>
+<tr><td>C</td><td>nest-starter-nestjs-7-to-8</td><td><strong>5/5</strong></td><td>$0.0064</td><td>92s</td><td>10</td></tr>
+<tr><td>C</td><td>openai-quickstart-openai-3-to-4</td><td><strong>5/5</strong></td><td>$0.0091</td><td>71s</td><td>18</td></tr>
+<tr><td>C</td><td>ynab-mcp-zod-3-to-4</td><td><strong>5/5</strong></td><td>$0.0170</td><td>148s</td><td>23</td></tr>
+</tbody></table>
+<h3 id="observations"><a class="zola-anchor" href="#observations" aria-label="Anchor link for: observations">Observations</a></h3>
+<ol>
+<li>
+<p><strong>The published codemod was the only setup that passed every run.</strong> Scenario C passed 20 out of 20 runs, B passed 29 out of 30 and the plain agent passed 23 out of 30. If we compare only the four tasks that have a published codemod, the plain agent passed 14 out of 20, the skill without a codemod 19 out of 20 and the skill with a codemod 20 out of 20. As a developer you usually run the agent once, so I care more about "does it work every time" than "does it work most of the time".</p>
+</li>
+<li>
+<p><strong>The plain agent does not know when to stop upgrading.</strong> NestJS was the biggest gap: the plain agent failed all 5 runs, while B and C passed all of them. The agent did get NestJS 8 working, but every time it also bumped <code>@nestjs/cli</code>, <code>@nestjs/schematics</code> and <code>typescript</code>, which the task did not need. This is exactly the noisy PR I talked about in the previous post. With Apiweiser, the <code>plan</code> step tells the agent which versions actually have to move, so B and C changed only the packages that needed to change.</p>
+</li>
+<li>
+<p><strong>Peer dependencies are where the plain agent struggles.</strong> npm reported a peer-dependency conflict (<code>ERESOLVE</code>) in 13 of the 30 plain agent runs, in 9 of the 30 B runs and in none of the C runs. NestJS shows it best: the plain agent hit the conflict in 4 of 5 runs, while B and C did not hit it at all. The one ESLint failure of the plain agent is a good example: it installed ESLint 9, but kept a <code>typescript-eslint</code> version that does not support it, so linting crashed with <code>Error while loading rule '@typescript-eslint/no-unused-expressions'</code>. B passed all 5 ESLint runs.</p>
+</li>
+<li>
+<p><strong>Using the skill without a codemod is the most expensive option.</strong> On average B cost about 2.7 times more than the plain agent and took about 2.4 times longer. Most of that time goes to writing a new codemod: the agent created one in 19 of the 30 runs and decided it was not worth it in the other 11. It paid off on NestJS and ESLint, but on Prisma, where the plain agent already passed 5 out of 5, it doubled the time (124s → 246s) without passing more runs.</p>
+</li>
+<li>
+<p><strong>A published codemod makes the agent cheaper and faster.</strong> Once the codemod exists, the agent does not need to figure out the API changes, it just runs the codemod and fixes what is left. On the same four tasks, C cost about $0.010 per run compared to $0.028 for B, and took 93s instead of 203s. Compared to the plain agent it costs a bit more per run ($0.010 vs $0.0065), but since the plain agent failed 6 of those 20 runs, the cost per successful run ends up almost the same ($0.0102 vs $0.0093). On NestJS, C even needed fewer turns than the plain agent (10 vs 18).</p>
+</li>
+<li>
+<p><strong>The codemod makes the result repeatable.</strong> For Redux Toolkit, all 5 C runs produced the exact same diff, while the plain agent produced three different diffs over 5 runs. NestJS was identical in all C runs and OpenAI in 4 out of 5. For zod the C diffs still differ, since the codemod covers only part of the upgrade and the agent does the rest. This is the deterministic part of the codemod approach showing up in the numbers.</p>
+</li>
+<li>
+<p><strong>"It builds" does not mean "it works".</strong> The plain agent and B each failed one OpenAI run even though the build passed. In OpenAI v4 the client throws an error as soon as it is created without an API key, so the app's own "API key is missing" response was never returned. Only a hidden test that checks the behaviour caught it. C passed all 5 runs here because the codemod keeps that check in place.</p>
+</li>
+<li>
+<p><strong>No agent cheated.</strong> None of the 80 runs changed, skipped or deleted a test file. All the passes come from actual upgrades, not from editing the tests until they pass.</p>
+</li>
+</ol>
+<h2 id="what-could-skew-these-numbers"><a class="zola-anchor" href="#what-could-skew-these-numbers" aria-label="Anchor link for: what-could-skew-these-numbers">What could skew these numbers</a></h2>
+<p>These numbers come from my own machine and my own setup, so before you trust them (hence the "trust-me-bro" in the title), here are the things that can make them look better or worse than they really are:</p>
+<ol>
+<li>
+<p><strong>The docs do not list all the API changes.</strong> Apiweiser builds its context from the changelogs and release notes of the library. If a breaking change is missing there, the agent does not know about it, even when it uses the skill, and the codemod it writes will not cover it. The upgrade then only works if the tests happen to catch the problem.</p>
+</li>
+<li>
+<p><strong>The agent does not use the skill.</strong> A skill is only a suggestion, and the agent decides whether to use it. In this evaluation every B and C run used <code>apiweiser-cli</code>, but in 11 of the 30 B runs the agent decided not to write a codemod. With another model or harness, the agent could skip the skill completely and behave like the plain agent.</p>
+</li>
+<li>
+<p><strong>The model is already trained on these upgrades.</strong> Popular upgrades like Prisma, zod or Redux Toolkit are most likely in the model's training data, together with lots of blog posts and migration guides about them. This makes the plain agent look better than it would on a less known library or on a version released after the model was trained, which is exactly where Apiweiser should help the most.</p>
+</li>
+<li>
+<p><strong>Five runs per task is a small sample.</strong> One failed run changes the pass rate of a task by 20%. The big differences, like NestJS, are clear, but the small ones, like the single OpenAI or ESLint failures, could easily change with more runs.</p>
+</li>
+<li>
+<p><strong>One model and one harness.</strong> All the runs used Codex with the same model. Other agents, models or reasoning effort settings could give different results, both for the plain agent and with the skill.</p>
+</li>
+<li>
+<p><strong>I wrote the tasks and the graders.</strong> The hidden tests check what I think matters in each upgrade, like the async thunk actions or the lint rules. A different person could write stricter or looser checks and get different pass rates.</p>
+</li>
+</ol>
+<h2 id="conclusion"><a class="zola-anchor" href="#conclusion" aria-label="Anchor link for: conclusion">Conclusion</a></h2>
+<p>Apiweiser helps the agent in two ways. The <code>plan</code> step tells it exactly which versions have to move, so it stops upgrading packages that do not need to change and avoids most of the peer-dependency conflicts. The codemod applies the API changes the same way every time, so the upgrade passes every run instead of missing some of them. Writing the codemod is the expensive part, but it is paid once.</p>
+<p>If you want to try it on your own codebase, you can check out <a rel="external" href="https://apiweiser-cli-fe.vercel.app/">Apiweiser</a>. I would appreciate any feedback!</p>
+
+                </section>
+            </article>
+        </main>
+    </div>
+
+
+
+            
+                
+            
+
+            
+        </div>
+
+        <div class="right-content">
+            
+    
+    
+
+        </div>
+        
+    </body>
+
+</html>
