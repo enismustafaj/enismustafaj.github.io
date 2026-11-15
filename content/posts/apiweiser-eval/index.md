@@ -23,7 +23,7 @@ how codemods and the tool I am building, [Apiweiser](https://apiweiser-cli-fe.ve
 
 
 ### Evaluation Framework
-I used the [Harbor](https://www.harborframework.com/) framework to run my evaluation scenarios. I chose Harbor because of how simple it is to configure the evaluation environments and scenarios. This evaluation consisted of 3 scenarios, as follows:
+I used the [Harbor](https://www.harborframework.com/) framework to run my evaluation scenarios. I chose Harbor because of how simple it is to configure the evaluation environments and scenarios. All the tasks, graders, job configs and results are available in the [apiweiser-eval](https://github.com/enismustafaj/apiweiser-eval) repo, so you can check them or run the evaluation yourself. This evaluation consisted of 3 scenarios, as follows:
 
 | Scenario | What the agent gets | Codemod |
 |---|---|---|
