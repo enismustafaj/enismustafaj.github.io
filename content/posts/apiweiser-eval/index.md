@@ -123,7 +123,7 @@ The following table show the coolected metrics from all the runs combined togert
 8. **No agent cheated.** None of the 80 runs changed, skipped or deleted a test file. All the passes come from actual upgrades, not from editing the tests until they pass.
 
 
-## Things that can ruin the results
+## What could skew these numbers
 
 These numbers come from my own machine and my own setup, so before you trust them (hence the "trust-me-bro" in the title), here are the things that can make them look better or worse than they really are:
 
