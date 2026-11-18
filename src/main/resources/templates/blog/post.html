@@ -6,7 +6,7 @@
 <main class="page narrow" th:with="post=${page.post}">
   <article>
     <header class="head">
-      <p class="label"><a th:href="${post.crumb.url}" th:text="${post.crumb.name}">Posts</a></p>
+      <p class="label"><a th:href="${page.site.home}">← All posts</a></p>
       <h1 class="title" th:text="${post.title}">Title</h1>
       <p class="stand" th:unless="${post.lede.isEmpty()}" th:text="${post.lede}">Lede</p>
       <p class="meta">
