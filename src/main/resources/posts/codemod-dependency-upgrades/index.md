@@ -1,7 +1,7 @@
-+++
-title = "Dependencies, Codemods and AI"
-date = 2026-10-18
-+++
+---
+title: "Dependencies, Codemods and AI"
+date: 2026-10-18
+---
 
  Lately, I have spent too many hours to upgrade dependencies my services use and updating each one of them and the dependencies they rely on, just to figure out the whole underlying framework has to be migrated to the new major version so that the new packages would not have "critical" vulnerabilities. Developers have to update dependencies to patch vulnerabilities, adopt new APIs or replace deprecated ones, and when organizations require "zero-vulnerability" versions, that work takes time away from building features for customers.
 

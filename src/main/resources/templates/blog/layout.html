@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:fragment="head">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${page.meta.title}">Blog</title>
+  <meta name="description" th:content="${page.meta.description}">
+  <link rel="canonical" th:unless="${page.meta.canonical.isEmpty()}" th:href="${page.meta.canonical}">
+  <meta property="og:type" th:content="${page.meta.type}">
+  <meta property="og:title" th:content="${page.meta.title}">
+  <meta property="og:description" th:content="${page.meta.description}">
+  <meta property="og:url" th:unless="${page.meta.canonical.isEmpty()}" th:content="${page.meta.canonical}">
+  <meta property="og:site_name" th:content="${page.meta.siteName}">
+  <meta property="og:image" th:unless="${page.meta.image.isEmpty()}" th:content="${page.meta.image}">
+  <meta name="twitter:card" th:content="${page.meta.twitterCard}">
+  <script type="application/ld+json" th:unless="${page.meta.jsonLd.isEmpty()}" th:utext="${page.meta.jsonLd}"></script>
+  <link rel="stylesheet" th:href="${page.site.root + '/beansprout/code.css'}">
+  <link rel="stylesheet" th:href="${page.site.root + '/blog.css'}">
+</head>
+<body>
+<header th:fragment="header" class="mast">
+  <div class="bar">
+    <a class="name" th:href="${page.site.home}"><span class="dot" aria-hidden="true"></span><span th:text="${page.site.name}">Blog</span></a>
+    <nav aria-label="Main">
+      <a th:href="${page.site.home}">Posts</a>
+      <a href="https://github.com/enismustafaj/">GitHub</a>
+      <a th:href="${page.site.root + '/cv.pdf'}">CV</a>
+    </nav>
+  </div>
+</header>
+
+<p th:fragment="dateline(tags, date, dateTime, reading)" class="dateline"><a th:unless="${tags.isEmpty()}" th:href="${tags[0].url}" th:text="${tags[0].name}">tag</a><span th:unless="${tags.isEmpty()}" class="sep">·</span><time th:datetime="${dateTime}" th:text="${date}">date</time><span class="sep">·</span><span th:text="${reading}">5 min</span></p>
+
+<ol th:fragment="log(cards)" class="log">
+  <li th:each="card : ${cards}">
+    <time th:datetime="${card.dateTime}" th:text="${card.date}">Date</time>
+    <a th:href="${card.url}" th:text="${card.title}">Title</a>
+    <span class="reading" th:text="${card.reading}">5 min</span>
+  </li>
+</ol>
+
+<nav th:fragment="pager(listing)" class="pager" th:unless="${listing.newer.isEmpty() and listing.older.isEmpty()}">
+  <a th:unless="${listing.newer.isEmpty()}" th:href="${listing.newer}">← Newer</a>
+  <span th:text="'Page ' + ${listing.page} + ' of ' + ${listing.pages}">Page 1 of 1</span>
+  <a th:unless="${listing.older.isEmpty()}" th:href="${listing.older}">Older →</a>
+</nav>
+
+<aside th:fragment="tags(site)" class="panel" th:unless="${site.tags.isEmpty()}">
+  <h2 class="label">Tags</h2>
+  <ul class="tags">
+    <li th:each="t : ${site.tags}"><a th:href="${t.url}" th:classappend="${t.current} ? 'on'"><span th:text="${t.name}">tag</span><span class="count" th:text="${t.count}">1</span></a></li>
+  </ul>
+</aside>
+
+<footer th:fragment="footer" class="foot">
+  <span th:text="'© ' + ${page.site.year} + ' ' + ${page.site.name}">© 2026</span>
+  <a href="https://github.com/enismustafaj/">GitHub</a>
+</footer>
+</body>
+</html>

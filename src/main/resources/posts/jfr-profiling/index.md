@@ -1,7 +1,7 @@
-+++
-title = "Profiling HTTP Requests with JFR Events"
-date = 2026-07-17
-+++
+---
+title: "Profiling HTTP Requests with JFR Events"
+date: 2026-07-17
+---
 
 ## What is profiling?
 

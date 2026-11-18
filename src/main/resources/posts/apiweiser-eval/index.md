@@ -1,9 +1,9 @@
-+++
-title = "\"Trust-me-bro\" Codemod Benchmarks"
-date = 2026-11-16
-+++
+---
+title: "\"Trust-me-bro\" Codemod Benchmarks"
+date: 2026-11-16
+---
 
-In the previous [post](https://enismustafaj.github.io/posts/codemod-dependency-upgrades/) I talked about the "pain" that the dependency upgrade process brings into developers' lives and
+In the previous [post](/posts/codemod-dependency-upgrades) I talked about the "pain" that the dependency upgrade process brings into developers' lives and
 how codemods and the tool I am building, [Apiweiser](https://apiweiser-cli-fe.vercel.app/), can significantly improve the process. This time I want to present some metrics I gathered based on some evaluations I ran on my machine, to verify the claims I made there.
 
 

@@ -1,7 +1,7 @@
-+++
-title = "Introduction to JDK Flight Recorder"
-date = 2026-03-21
-+++
+---
+title: "Introduction to JDK Flight Recorder"
+date: 2026-03-21
+---
 
 ## Overview
 JDK Flight Recorder is a tool, integrated in JVM, for collecting diagnostics and profiling data from running Java applications. It causes insignificant performance overhead in the running application, so it can be enabled in high-load production environment.

@@ -1,0 +1,5 @@
+beansprout:
+  title: Enis Mustafaj
+  author: Enis Mustafaj
+  base-path: /posts   # keeps the old /posts/... URL prefix
+  site-url: https://enismustafaj.github.io

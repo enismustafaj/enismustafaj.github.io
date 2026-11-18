@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{blog/layout :: head}"></head>
+<body>
+<header th:replace="~{blog/layout :: header}"></header>
+<main class="page narrow">
+  <p class="label status">404 · not found</p>
+  <h1 class="title">Nothing at <code th:text="${page.path}">/x</code></h1>
+  <th:block th:unless="${page.recent.isEmpty()}">
+    <p class="label">Recent posts</p>
+    <ol class="log"><li th:each="p : ${page.recent}"><time th:datetime="${p.dateTime}" th:text="${p.date}">d</time><a th:href="${p.url}" th:text="${p.title}">t</a><span class="reading" th:text="${p.reading}">r</span></li></ol>
+  </th:block>
+</main>
+<footer th:replace="~{blog/layout :: footer}"></footer>
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{blog/layout :: head}"></head>
+<body>
+<header th:replace="~{blog/layout :: header}"></header>
+<main class="page narrow" th:with="post=${page.post}">
+  <article>
+    <header class="head">
+      <p class="label"><a th:href="${post.crumb.url}" th:text="${post.crumb.name}">Posts</a></p>
+      <h1 class="title" th:text="${post.title}">Title</h1>
+      <p class="stand" th:unless="${post.lede.isEmpty()}" th:text="${post.lede}">Lede</p>
+      <p class="meta">
+        <span>Published <time th:datetime="${post.dateTime}" th:text="${post.date}">Date</time></span>
+        <span th:text="${post.reading}">5 min</span>
+        <span th:unless="${post.updated.isEmpty()}">Updated <time th:datetime="${post.updatedDateTime}" th:text="${post.updated}">Date</time></span>
+        <span th:unless="${post.tags.isEmpty()}">Filed under <a th:each="t, s : ${post.tags}" th:href="${t.url}" th:text="${t.name} + (${s.last} ? '' : ',')">tag</a></span>
+      </p>
+    </header>
+    <div class="prose" th:utext="${post.body}"></div>
+  </article>
+  <nav class="article-nav">
+    <a th:unless="${post.older.url.isEmpty()}" th:href="${post.older.url}"><span class="label">← Older</span><span th:text="${post.older.title}">t</span></a>
+    <a class="newer" th:unless="${post.newer.url.isEmpty()}" th:href="${post.newer.url}"><span class="label">Newer →</span><span th:text="${post.newer.title}">t</span></a>
+  </nav>
+</main>
+<footer th:replace="~{blog/layout :: footer}"></footer>
+</body>
+</html>

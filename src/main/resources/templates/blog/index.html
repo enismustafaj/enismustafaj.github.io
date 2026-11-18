@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{blog/layout :: head}"></head>
+<body>
+<header th:replace="~{blog/layout :: header}"></header>
+<main class="page" th:with="cards=${page.latest.cards}">
+  <div class="front">
+    <div>
+      <p class="label">Latest</p>
+      <article class="lead" th:unless="${cards.isEmpty()}" th:with="lead=${cards[0]}">
+        <p th:replace="~{blog/layout :: dateline(${lead.tags}, ${lead.date}, ${lead.dateTime}, ${lead.reading})}"></p>
+        <h1><a th:href="${lead.url}" th:text="${lead.title}">Title</a></h1>
+        <p class="excerpt" th:unless="${lead.excerpt.isEmpty()}" th:text="${lead.excerpt}">Excerpt</p>
+        <a class="more" th:href="${lead.url}">Read the post →</a>
+      </article>
+      <th:block th:if="${cards.size() > 1}">
+        <p class="label">Log</p>
+        <ol th:replace="~{blog/layout :: log(${cards.subList(1, cards.size())})}"></ol>
+      </th:block>
+      <nav th:replace="~{blog/layout :: pager(${page.latest})}"></nav>
+    </div>
+    <aside th:replace="~{blog/layout :: tags(${page.site})}"></aside>
+  </div>
+</main>
+<footer th:replace="~{blog/layout :: footer}"></footer>
+</body>
+</html>

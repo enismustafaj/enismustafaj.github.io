@@ -1,8 +1,0 @@
-{% extends "base.html" %}
-
-{% block main_content %}
-    {% set posts = get_section(path="posts/_index.md") %}
-    <main class="post-list">
-        {{ post_macros::list_posts(pages=posts.pages) }}
-    </main>
-{% endblock main_content %}

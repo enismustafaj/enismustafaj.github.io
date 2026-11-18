@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{blog/layout :: head}"></head>
+<body>
+<header th:replace="~{blog/layout :: header}"></header>
+<main class="page">
+  <div class="front">
+    <div>
+      <p class="label">Filed under</p>
+      <h1 class="title" th:text="${page.name}">tag</h1>
+      <p class="sub" th:text="${page.count}">3 posts</p>
+      <ol th:replace="~{blog/layout :: log(${page.listing.cards})}"></ol>
+      <nav th:replace="~{blog/layout :: pager(${page.listing})}"></nav>
+    </div>
+    <aside th:replace="~{blog/layout :: tags(${page.site})}"></aside>
+  </div>
+</main>
+<footer th:replace="~{blog/layout :: footer}"></footer>
+</body>
+</html>

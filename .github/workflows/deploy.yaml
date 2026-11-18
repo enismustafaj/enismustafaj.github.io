@@ -1,17 +1,42 @@
-name: Deploy
+name: Blog
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
 
 jobs:
-  deployment:
+  publish:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-      - name: Build and deploy
-        uses: shalzz/zola-deploy-action@v0.22.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25
+          cache: maven
+      - run: ./mvnw --batch-mode --quiet -DskipTests package
+      - run: java -jar target/blog-0.0.1.jar --beansprout.export.enabled=true
+      # ponytail: Beansprout can't turn off the archive and feed, so drop them from the export
+      - run: |
+          rm target/blog/posts/archive.html target/blog/posts/feed.xml
+          sed -i '/posts\/archive</d' target/blog/posts/sitemap.xml
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: target/blog
+      - id: deploy
+        uses: actions/deploy-pages@v4
